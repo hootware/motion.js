@@ -23,18 +23,30 @@
 
 (function(){
 	
+	var logger = document.getElementById('logger');
+	function log(text){
+		var line = document.createElement('li');
+		line.innerHTML = text;
+		logger.insertBefore(line, logger.firstChild)
+	}
+	
 	/**
 	 * Shake detection
 	 */
 	if (window.DeviceMotionEvent === undefined) {
 		//Not supported
-		throw "Device motion not supported";
+		log("Device motion not supported");
 		
 	} else {
+		log("Start");
 		var shake = {
 			events: {},
-			sensitivity: 20,
+			startCount: 0,
+			stopCount: 0,
+			first: true,
+			delay: true,
 			shaking: false,
+			sensitivity: 5,
 			baseCoords: {
 				x: 0,
 				y: 0,
@@ -47,10 +59,14 @@
 			},
 			init: function(){
 				//Initialise custom events
+				log("Init start");
 				this.events['start'] = document.createEvent("Event");
-				this.events['start'].initEvent('start', true, true);
+				this.events['start'].initEvent('shakestart', true, true);
 				this.events['end'] = document.createEvent("Event");
-				this.events['end'].initEvent('event', true, true);
+				this.events['end'].initEvent('shakeend', true, true);
+				//Start listening
+				this.listen();
+				log("Init end");
 			},
 			update: function(x, y, z, shaking) {
 				//Update coords
@@ -67,6 +83,7 @@
 				if (!this.shaking) {
 					this.shaking = true;
 					//Emit shake start
+					log("Start event");
 					window.dispatchEvent(this.events['start']);
 				}
 			},
@@ -74,47 +91,44 @@
 				if (this.shaking) {
 					this.shaking = false;
 					//Emit shake end
+					log("Stop event");
 					window.dispatchEvent(this.events['end']);
 				}
 			},
 			listen: function(){
 				window.addEventListener('devicemotion', function (e) {
+					
 					//Collect values
-					var newX = e.accelerationIncludingGravity.x;
-					var newY = e.accelerationIncludingGravity.y;
-					var newZ = e.accelerationIncludingGravity.z;
-
+					var newX = parseInt(e.accelerationIncludingGravity.x);
+					var newY = parseInt(e.accelerationIncludingGravity.y);
+					var newZ = parseInt(e.accelerationIncludingGravity.z);
+					var shaking = false;
+					//log("motion: " + newX + "\t" + shake.currentCoords.x + "\t" + Math.abs(newX - shake.currentCoords.x));
+					
+					//log("X " + Math.abs(newX) + ' - ' + shake.sensitivity);
+					//log("Y " + Math.abs(newY) + ' - ' + shake.sensitivity);
+					//log("Z " + Math.abs(newZ) + ' - ' + shake.sensitivity);
+					
 					//Check the Z axis
 					if (Math.abs(newX - shake.currentCoords.x) > shake.sensitivity) {
-						//X has started
-						this.update(newX, newY, newZ, true);
-						return;
-					} else if (Math.abs(newX - shake.currentCoords.x) <= shake.sensitivity) {
-						//X has stopped
-						this.update(newX, newY, newZ, false);
-						return;
-					
+						//X hass changed
+						shaking = true;
+						
 					//Check the Y axis
-					} else if (Math.abs(newX - shake.currentCoords.y) > shake.sensitivity) {
+					} else if (Math.abs(newY - shake.currentCoords.y) > shake.sensitivity) {
 						//Y has changed
-						this.update(newX, newY, newZ, true);
-						return;
-					} else if (Math.abs(newY - shake.currentCoords.y) <= shake.sensitivity) {
-						//X has stopped
-						this.update(newX, newY, newZ, false);
-						return;
-					
+						shaking = true;
+						
 					//Check the Z axis
 					} else if (Math.abs(newZ - shake.currentCoords.z) > shake.sensitivity) {
 						//Y has changed
-						this.update(newZ, newZ, newZ, true);
-						return;
-					} else if (Math.abs(newZ - shake.currentCoords.z) <= shake.sensitivity) {
-						//X has stopped
-						this.update(newX, newY, newZ, false);
-						return;
+						shaking = true;
+					
 					}
 
+					//log(shaking);
+					this.update(newX, newY, newZ, shaking);
+					
 				}.bind(this), false);
 			}
 		}
