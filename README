@@ -1,0 +1,15 @@
+                 __                            _____  ____       
+ /'\_/`\        /\ \__  __                    /\___ \/\  _`\     
+/\      \    ___\ \ ,_\/\_\    ___    ___     \/__/\ \ \,\L\_\   
+\ \ \__\ \  / __`\ \ \/\/\ \  / __`\/' _ `\      _\ \ \/_\__ \   
+ \ \ \_/\ \/\ \L\ \ \ \_\ \ \/\ \L\ \\ \/\ \    /\ \_\ \/\ \L\ \ 
+  \ \_\\ \_\ \____/\ \__\\ \_\ \____/ \_\ \_\   \ \____/\ `\____\
+   \/_/ \/_/\/___/  \/__/ \/_/\/___/ \/_/\/_/    \/___/  \/_____/
+
+
+A library to help with modern browsers that handle device motion and orientation.
+
+For example: shaking, twisting and moving a device.
+
+All coming soon
+
