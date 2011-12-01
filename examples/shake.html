@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	</head>
+	<body>
+		<div>Shaking: <span id="shaking"></span></div>
+		
+		<script type="text/javascript">
+			(function(){
+				//Listen for the shake start
+				window.addEventListener('shakestart', function(event){
+					document.getElementById('shaking').innerHTML = 'true';
+				});
+				
+				//Listen for the shake end
+				window.addEventListener('shakeend', function(event){
+					document.getElementById('shaking').innerHTML = 'false';
+				});
+
+			})();
+		</script>
+		
+		<script type="text/javascript" src="../motion.js"></script>
+		
+	</body>
+</html>
