@@ -41,22 +41,11 @@
 		log("Start");
 		var shake = {
 			events: {},
-			startCount: 0,
-			stopCount: 0,
-			first: true,
-			delay: true,
+			stopping: false,
+			starting: false,
 			shaking: false,
 			sensitivity: 5,
-			baseCoords: {
-				x: 0,
-				y: 0,
-				z: 0
-			},
-			currentCoords: {
-				x: 0,
-				y: 0,
-				z: 0
-			},
+			currentCoords: null,
 			init: function(){
 				//Initialise custom events
 				log("Init start");
@@ -68,66 +57,70 @@
 				this.listen();
 				log("Init end");
 			},
-			update: function(x, y, z, shaking) {
-				//Update coords
-				this.currentCoords.x = x;
-				this.currentCoords.y = y;
-				this.currentCoords.z = z;
-				if (shaking) {
-					this.start();
-				} else {
-					this.stop();
-				}
-			},
 			start: function() {
-				if (!this.shaking) {
-					this.shaking = true;
-					//Emit shake start
-					log("Start event");
-					window.dispatchEvent(this.events['start']);
-				}
+				//Emit shake start
+				this.shaking = true;
+				log("Start event");
+				window.dispatchEvent(this.events['start']);
 			},
 			stop: function() {
-				if (this.shaking) {
-					this.shaking = false;
-					//Emit shake end
-					log("Stop event");
-					window.dispatchEvent(this.events['end']);
-				}
+				this.shaking = false;
+				this.lastStop = new Date().getTime();
+				//Emit shake end
+				log("Stop event");
+				window.dispatchEvent(this.events['end']);
 			},
 			listen: function(){
 				window.addEventListener('devicemotion', function (e) {
+					//Change
+					var change = 0;
 					
-					//Collect values
-					var newX = parseInt(e.accelerationIncludingGravity.x);
-					var newY = parseInt(e.accelerationIncludingGravity.y);
-					var newZ = parseInt(e.accelerationIncludingGravity.z);
-					var shaking = false;
-					//log("motion: " + newX + "\t" + shake.currentCoords.x + "\t" + Math.abs(newX - shake.currentCoords.x));
+					//New Coords
+					var newX = e.accelerationIncludingGravity.x;
+					var newY = e.accelerationIncludingGravity.y;
+					var newZ = e.accelerationIncludingGravity.z;
 					
-					//log("X " + Math.abs(newX) + ' - ' + shake.sensitivity);
-					//log("Y " + Math.abs(newY) + ' - ' + shake.sensitivity);
-					//log("Z " + Math.abs(newZ) + ' - ' + shake.sensitivity);
-					
-					//Check the Z axis
-					if (Math.abs(newX - shake.currentCoords.x) > shake.sensitivity) {
-						//X hass changed
-						shaking = true;
-						
-					//Check the Y axis
-					} else if (Math.abs(newY - shake.currentCoords.y) > shake.sensitivity) {
-						//Y has changed
-						shaking = true;
-						
-					//Check the Z axis
-					} else if (Math.abs(newZ - shake.currentCoords.z) > shake.sensitivity) {
-						//Y has changed
-						shaking = true;
-					
+					//If not the first
+					if (this.coords != null) {
+						change = Math.abs(this.coords.x - newX + this.coords.y - newY + this.coords.z - newZ);
+					} else {
+						this.coords = {};
 					}
+					
+					//Update
+					this.coords.x = newX;
+					this.coords.y = newY;
+					this.coords.z = newZ;
+					
+					//If we have a change on 2 axis then we are shaking properly
+					if (change >= this.sensitivity) {
+						//If not currently shaking
+						if (!this.shaking) {
+							//Check to see if its starting, if so then start it properly
+							if (this.starting) {
+								this.start();
+								this.starting = false;
+							
+							//Check to see if its starting, if it isn't then set it to starting
+							} else {
+								this.starting = true;
+							}						
+						}
+						
+					} else {
+						//If currently shaking
+						if (this.shaking) {
+							//Check to see if its starting, if so then start it properly
+							if (this.stopping) {
+								this.stop();
+								this.stopping = false;
 
-					//log(shaking);
-					this.update(newX, newY, newZ, shaking);
+							//Check to see if its starting, if it isn't then set it to starting
+							} else {
+								this.stopping = true;
+							}
+						}	
+					}
 					
 				}.bind(this), false);
 			}
