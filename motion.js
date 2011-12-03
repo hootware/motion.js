@@ -23,11 +23,11 @@
 
 (function(){
 	
-	var logger = document.getElementById('logger');
+	//var logger = document.getElementById('logger');
 	function log(text){
-		var line = document.createElement('li');
-		line.innerHTML = text;
-		logger.insertBefore(line, logger.firstChild)
+		//var line = document.createElement('li');
+		//line.innerHTML = text;
+		//logger.insertBefore(line, logger.firstChild)
 	}
 	
 	/**
