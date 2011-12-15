@@ -16,11 +16,13 @@
 			(function(){
 				//Listen for the shake start
 				window.addEventListener('shakestart', function(event){
+					//console.log("Start");
 					document.body.style.backgroundColor = '#ff00ff';
 				});
 				
 				//Listen for the shake end
 				window.addEventListener('shakeend', function(event){
+					//console.log("Stop");
 					document.body.style.backgroundColor = '#ffffff';
 				});
 

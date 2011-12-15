@@ -22,22 +22,15 @@
  */
 
 (function(){
-	
-	//var logger = document.getElementById('logger');
-	function log(text){
-		//var line = document.createElement('li');
-		//line.innerHTML = text;
-		//logger.insertBefore(line, logger.firstChild)
+	window.isMotionSupported = function() {
+		return (window.DeviceMotionEvent !== undefined);
 	}
+	
 	
 	/**
 	 * Shake detection
 	 */
-	if (window.DeviceMotionEvent === undefined) {
-		//Not supported
-		log("Device motion not supported");
-		
-	} else {
+	if (window.isMotionSupported()) {
 		log("Start");
 		var shake = {
 			events: {},
@@ -71,7 +64,10 @@
 				window.dispatchEvent(this.events['end']);
 			},
 			listen: function(){
-				window.addEventListener('devicemotion', function (e) {
+				//Ugly as ios 4 was a pain
+				var self = this;
+				window.addEventListener('devicemotion', function(e) {
+					
 					//Change
 					var change = 0;
 					
@@ -81,48 +77,48 @@
 					var newZ = e.accelerationIncludingGravity.z;
 					
 					//If not the first
-					if (this.coords != null) {
-						change = Math.abs(this.coords.x - newX + this.coords.y - newY + this.coords.z - newZ);
+					if (self.coords != null) {
+						change = Math.abs(self.coords.x - newX + self.coords.y - newY + self.coords.z - newZ);
 					} else {
-						this.coords = {};
+						self.coords = {};
 					}
 					
 					//Update
-					this.coords.x = newX;
-					this.coords.y = newY;
-					this.coords.z = newZ;
+					self.coords.x = newX;
+					self.coords.y = newY;
+					self.coords.z = newZ;
 					
 					//If we have a change on 2 axis then we are shaking properly
-					if (change >= this.sensitivity) {
+					if (change >= self.sensitivity) {
 						//If not currently shaking
-						if (!this.shaking) {
+						if (!self.shaking) {
 							//Check to see if its starting, if so then start it properly
-							if (this.starting) {
-								this.start();
-								this.starting = false;
+							if (self.starting) {
+								self.start();
+								self.starting = false;
 							
 							//Check to see if its starting, if it isn't then set it to starting
 							} else {
-								this.starting = true;
+								self.starting = true;
 							}						
 						}
 						
 					} else {
 						//If currently shaking
-						if (this.shaking) {
+						if (self.shaking) {
 							//Check to see if its starting, if so then start it properly
-							if (this.stopping) {
-								this.stop();
-								this.stopping = false;
+							if (self.stopping) {
+								self.stop();
+								self.stopping = false;
 
 							//Check to see if its starting, if it isn't then set it to starting
 							} else {
-								this.stopping = true;
+								self.stopping = true;
 							}
 						}	
 					}
 					
-				}.bind(this), false);
+				}, false);
 			}
 		}
 		shake.init();
