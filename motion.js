@@ -31,7 +31,6 @@
 	 * Shake detection
 	 */
 	if (window.isMotionSupported()) {
-		log("Start");
 		var shake = {
 			events: {},
 			stopping: false,
@@ -41,26 +40,22 @@
 			currentCoords: null,
 			init: function(){
 				//Initialise custom events
-				log("Init start");
 				this.events['start'] = document.createEvent("Event");
 				this.events['start'].initEvent('shakestart', true, true);
 				this.events['end'] = document.createEvent("Event");
 				this.events['end'].initEvent('shakeend', true, true);
 				//Start listening
 				this.listen();
-				log("Init end");
 			},
 			start: function() {
 				//Emit shake start
 				this.shaking = true;
-				log("Start event");
 				window.dispatchEvent(this.events['start']);
 			},
 			stop: function() {
 				this.shaking = false;
 				this.lastStop = new Date().getTime();
 				//Emit shake end
-				log("Stop event");
 				window.dispatchEvent(this.events['end']);
 			},
 			listen: function(){
