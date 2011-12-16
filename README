@@ -26,5 +26,5 @@ window.addEventListener('shakestart', function(event){
 				
 //Listen for the shake end
 window.addEventListener('shakeend', function(event){
-	document.body.style.background = 'none';
+	//Do something else
 });
