@@ -1,0 +1,43 @@
+html {font-family: 'Comfortaa', Helvetica, Arial; background-color:#ffb11a; background-image: url('http://motionjs.org/images/bg.png'); background-position:top left; background-repeat: repeat-x; color:#000000; padding:0px; margin:0px; font-size:20px; font-weight:bold;}
+#logo {display:block; margin:0px auto; margin-top:15px; padding:0px;}
+#tag {display:block; margin:0px auto; padding:0px; font-size:28px; text-align:center;}
+#nav {list-style:none; padding:0px; margin:20px auto; display:block; text-align:center;}
+#nav li {margin:0px; border-left:2px solid #000000; padding-left:13px; padding-right:10px; padding-top:5px; padding-bottom:5px; display: inline-block; font-size:17px;}
+#nav li a { color:#000000; text-decoration:none; font-weight:100;}
+#nav li a:hover { color:#843f23;}
+#nav li.first {border:none;}
+#description {display:block; margin:0 auto; text-align:justify; width:725px; font-weight:100; font-size:15px;}
+#supported {width:705px; padding:10px; border:2px solid #c90202; margin:0 auto; margin-bottom:20px; font-size:14px; font-weight:100; text-align:center; color:#c90202; background:#ffe9e9;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
+#example { overflow-x:auto; overflow-y:hidden; width:685px; display:block; margin:20 auto;
+	-moz-box-shadow: inset 0 0 15px 0px #888;
+	-webkit-box-shadow: inset 0 0 15px 0px #888;
+	box-shadow: inset 0 0 15px 0px #888;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	padding:20px;
+	background: #eeeeee;
+	border:2px solid #000000;
+}
+#example pre {padding:0px; margin:0px; font-weight:normal; font-size:12px;}
+#example pre .comment {color:#777777;}
+#example pre .function .keyword {color:#000cff;}
+#example pre .string {color:#c90202;}
+#example pre .literal {color:#08ac00;}
+#share {list-style:none; padding:0px; margin:20px auto; margin-left:-10px; display:block; text-align:center;}
+#share li {margin:0px; padding-left:13px; padding-right:10px; padding-top:3px; padding-bottom:3px; display: inline-block; }
+
+#footer {list-style:none; padding:0px; margin:20px auto; margin-left:-10px; display:block; text-align:center;}
+#footer li {margin:0px; border-left:2px solid #000000; padding-left:13px; padding-right:10px; padding-top:3px; padding-bottom:3px; display: inline-block; font-size:14px; font-weight:100;}
+#footer li a { color:#000000; text-decoration:none; font-weight:100;}
+#footer li a:hover { color:#843f23;}
+#footer li.first {border:none;}
+
+#linkList { list-style:none; padding:0px; margin:0px; width:700px; margin:0 auto;}
+#linkList li {margin-top:10px; font-size:16px; margin-left:20px;}
+#linkList li a {color:#000000; text-decoration:none;}
+#linkList li p { display:inline-block; font-size:12px; font-weight:100; color:#333333; margin-left:10px;}
