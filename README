@@ -6,13 +6,25 @@
   \ \_\\ \_\ \____/\ \__\\ \_\ \____/ \_\ \_\   \ \____/\ `\____\
    \/_/ \/_/\/___/  \/__/ \/_/\/___/ \/_/\/_/    \/___/  \/_____/
 
-
 A library to help with modern browsers that handle device motion and orientation.
 
 For example: shaking, twisting and moving a device.
 
-All coming soon! Existing code is completely untested!!
+Homepage:	http://motionjs.org
+Examples:	http://text.motionjs.org
+Creator:	http://twitter.com/ollieparsley
+Twitter:	http://twitter.com/motionjs
 
-http://twitter.com/ollieparsley
-http://twitter.com/motionjs
 
+
+Simple shake detection example:
+
+//Listen for the shake start
+window.addEventListener('shakestart', function(event){
+	//Do something
+});
+				
+//Listen for the shake end
+window.addEventListener('shakeend', function(event){
+	document.body.style.background = 'none';
+});
