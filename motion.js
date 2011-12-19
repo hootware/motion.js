@@ -25,12 +25,15 @@
 	window.isMotionSupported = function() {
 		return (window.DeviceMotionEvent !== undefined);
 	}
+	window.isOrientationSupported = function() {
+		return (window.DeviceOrientationEvent !== undefined);
+	}
 	
-	
-	/**
-	 * Shake detection
-	 */
+	//Only start if motion is supported
 	if (window.isMotionSupported()) {
+		/**
+		* Shake detection
+		*/
 		var shake = {
 			events: {},
 			stopping: false,
@@ -118,4 +121,78 @@
 		}
 		shake.init();
 	}
+	
+	//Only start if motion is supported
+	//if (window.isOrientationSupported()) {
+		/**
+		* Shake detection
+		*/
+		var orientation = {
+			events: {},
+			faceup: false,
+			facedown: false,
+			rotateLeft: false,
+			rotateRight: false,
+			sensitivity: 15,
+			init: function(){
+				//Initialise custom events
+				this.events['faceupstart'] = document.createEvent("Event");
+				this.events['faceupstart'].initEvent('faceupstart', true, true);
+				this.events['faceupstart'] = document.createEvent("Event");
+				this.events['faceupstart'].initEvent('faceupstart', true, true);
+				this.events['facedown'] = document.createEvent("Event");
+				this.events['facedown'].initEvent('facedown', true, true);
+				//Start listening
+				this.listen();
+			},
+			faceup: function(active) {
+				//Emit shake start
+				this.faceup = active;
+				if (active) {
+					window.dispatchEvent(this.events['faceupstart']);
+				} else {
+					window.dispatchEvent(this.events['faceupend']);
+				}
+			},
+			facedown: function() {
+				this.facedown = true;
+				window.dispatchEvent(this.events['faceup']);
+			},
+			listen: function(){
+				//Ugly as ios 4 was a pain
+				var self = this;
+				
+				//W3C orientation spec
+				window.addEventListener("deviceorientation", function(event) {
+					//document.getElementById('status').innerHTML = new Date().getTime();
+					// process event.alpha, event.beta and event.gamma
+					self.process(parseInt(event.alpha, 10), parseInt(event.beta, 10), parseInt(event.gamma, 10));
+				}, false);
+			},
+			process: function(a, b, g) {
+				var s = this.sensitivity;
+				document.getElementById('alpha').innerHTML = a;
+				document.getElementById('beta').innerHTML = b;
+				document.getElementById('gamma').innerHTML = g;
+				
+				var status = '';
+				
+				//Check for face up
+				if (!this.faceup && b < (0 + s) && b > (0 - s) && g < (0 + s) && g > (0 - s)) {
+					this.faceup(true);
+				} else {
+					this.faceup(false);
+				}
+				
+				//Check for face down
+				if (!this.facedown && b < (0 + s) && b > (0 - s) && g < (180 + s) && g > (180 - s)) {
+					this.facedown(true);
+				} else {
+					this.facedown(false);
+				}
+
+			}
+		}
+		orientation.init();
+	//}
 })();
