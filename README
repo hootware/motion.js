@@ -34,7 +34,7 @@ window.addEventListener('faceupstart', function(event){
 	//Do something
 });
 
-//Listen for the device not facing straight up
+//Listen for the device no longer facing up
 window.addEventListener('faceupend', function(event){
 	//Do something
 });
