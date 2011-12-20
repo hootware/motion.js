@@ -11,7 +11,7 @@ A library to help with modern browsers that handle device motion and orientation
 For example: shaking, twisting and moving a device.
 
 Homepage:	http://motionjs.org
-Examples:	http://text.motionjs.org
+Examples:	http://motionjs.org/examples
 Creator:	http://twitter.com/ollieparsley
 Twitter:	http://twitter.com/motionjs
 
@@ -27,4 +27,14 @@ window.addEventListener('shakestart', function(event){
 //Listen for the shake end
 window.addEventListener('shakeend', function(event){
 	//Do something else
+});
+
+//Listen for the device facing up
+window.addEventListener('faceupstart', function(event){
+	//Do something
+});
+
+//Listen for the device no longer facing up
+window.addEventListener('faceupend', function(event){
+	//Do something
 });
