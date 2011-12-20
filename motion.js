@@ -39,7 +39,7 @@
 			stopping: false,
 			starting: false,
 			shaking: false,
-			sensitivity: 5,
+			sensitivity: 10,
 			currentCoords: null,
 			init: function(){
 				//Initialise custom events
