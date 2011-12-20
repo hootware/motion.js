@@ -26,7 +26,7 @@
 		return (window.DeviceMotionEvent !== undefined);
 	}
 	window.isOrientationSupported = function() {
-		return (window.DeviceOrientationEvent !== undefined);
+		return (window.DeviceOrientationEvent !== undefined || window.OrientationEvent !== undefined);
 	}
 	
 	//Only start if motion is supported
@@ -123,76 +123,84 @@
 	}
 	
 	//Only start if motion is supported
-	//if (window.isOrientationSupported()) {
+	if (window.isOrientationSupported()) {
 		/**
 		* Shake detection
 		*/
 		var orientation = {
 			events: {},
-			faceup: false,
-			facedown: false,
-			rotateLeft: false,
-			rotateRight: false,
-			sensitivity: 15,
-			init: function(){
+			faceupActive: false,
+			facedownActive: false,
+			rotateLeftActive: false,
+			rotateRightActive: false,
+			sensitivity: 20,
+			init: function() {
 				//Initialise custom events
 				this.events['faceupstart'] = document.createEvent("Event");
 				this.events['faceupstart'].initEvent('faceupstart', true, true);
-				this.events['faceupstart'] = document.createEvent("Event");
-				this.events['faceupstart'].initEvent('faceupstart', true, true);
-				this.events['facedown'] = document.createEvent("Event");
-				this.events['facedown'].initEvent('facedown', true, true);
+				this.events['faceupend'] = document.createEvent("Event");
+				this.events['faceupend'].initEvent('faceupend', true, true);
+				this.events['facedownstart'] = document.createEvent("Event");
+				this.events['facedownstart'].initEvent('facedownstart', true, true);
+				this.events['facedownend'] = document.createEvent("Event");
+				this.events['facedownend'].initEvent('facedownend', true, true);
 				//Start listening
 				this.listen();
 			},
 			faceup: function(active) {
-				//Emit shake start
-				this.faceup = active;
+				this.faceupActive = active;
 				if (active) {
+					//Emit face up start
 					window.dispatchEvent(this.events['faceupstart']);
 				} else {
+					//Emit face up end
 					window.dispatchEvent(this.events['faceupend']);
 				}
 			},
-			facedown: function() {
-				this.facedown = true;
-				window.dispatchEvent(this.events['faceup']);
+			facedown: function(active) {
+				this.facedownActive = active;
+				if (active) {
+					//Emit face down start
+					window.dispatchEvent(this.events['facedownstart']);
+				} else {
+					//Emit face down end
+					window.dispatchEvent(this.events['facedownend']);
+				}
 			},
 			listen: function(){
-				//Ugly as ios 4 was a pain
+				//Ugly as ios 4 wasn't binding was a pain
 				var self = this;
 				
 				//W3C orientation spec
 				window.addEventListener("deviceorientation", function(event) {
-					//document.getElementById('status').innerHTML = new Date().getTime();
-					// process event.alpha, event.beta and event.gamma
 					self.process(parseInt(event.alpha, 10), parseInt(event.beta, 10), parseInt(event.gamma, 10));
+				}, false);
+				
+				//Old Moz orientation spec
+				window.addEventListener("MozOrientation", function(event) {
+					self.process(null, parseInt(-(event.x * (180 / Math.PI))), parseInt(-(event.y * (180 / Math.PI))));
 				}, false);
 			},
 			process: function(a, b, g) {
+				//Shorter access to variable
 				var s = this.sensitivity;
-				document.getElementById('alpha').innerHTML = a;
-				document.getElementById('beta').innerHTML = b;
-				document.getElementById('gamma').innerHTML = g;
-				
-				var status = '';
 				
 				//Check for face up
-				if (!this.faceup && b < (0 + s) && b > (0 - s) && g < (0 + s) && g > (0 - s)) {
+				if (!this.faceupActive && b < (0 + s) && b > (0 - s) && g < (0 + s) && g > (0 - s)) {
 					this.faceup(true);
-				} else {
+				} else if (this.faceupActive && (b > (0 + s) || b < (0 - s) || g > (0 + s) || g < (0 - s)) ){
 					this.faceup(false);
 				}
 				
 				//Check for face down
-				if (!this.facedown && b < (0 + s) && b > (0 - s) && g < (180 + s) && g > (180 - s)) {
+				if (!this.facedownActive && b < (0 + s) && b > (0 - s) && g < (180 + s) && g > (180 - s)) {
 					this.facedown(true);
-				} else {
+				} else if (this.facedownActive && (b > (0 + s) || b < (0 - s) || g > (180 + s) || g < (180 - s)) ){
 					this.facedown(false);
 				}
 
 			}
 		}
 		orientation.init();
-	//}
+	}
 })();
